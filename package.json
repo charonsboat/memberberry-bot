@@ -1,0 +1,21 @@
+{
+  "name": "@drm2/memberberry-bot",
+  "description": "A Twitter bot to help you 'member things.",
+  "version": "0.0.1",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/drm2/memberberry-bot.git"
+  },
+  "author": "David R. Myers II <davidrmyersii@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/drm2/memberberry-bot/issues"
+  },
+  "homepage": "https://github.com/drm2/memberberry-bot#readme"
+}

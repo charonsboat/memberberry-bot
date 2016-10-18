@@ -56,17 +56,6 @@ var schedule_reminder = function (tweet, reminder_time)
 
 var stream = bot.filteredStream(keyword);
 
-// // init storage
-// storage.init({
-//     dir: 'storage.json'
-// });
-//
-// // loop through storage and set schedules
-// storage.forEach(function (id, info) {
-//     console.log('id', id);
-//     console.log('info', info);
-// });
-
 db.all(function (err, reminders) {
     for (var id in reminders)
     {

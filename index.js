@@ -75,6 +75,12 @@ stream.on('tweet', function (tweet) {
     // find the reminder delay (provided in the #remindme Tweet)
     var reminder_time = HumanDate(tweet.text.substring(tweet.text.indexOf(process.env.TWITTER_STREAM_FILTER) + process.env.TWITTER_STREAM_FILTER.length, tweet.text.length));
 
+    // make sure the reminder time is valid
+    if (reminder_time < Date.now() + (30 * 1000))
+    {
+        reminder_time = new Date(Date.now() + (24 * 60 * 60 * 1000));
+    }
+
     // build the formatted date to use in the initial acknowledgement reply
     var formatted_date = format_date(reminder_time);
 

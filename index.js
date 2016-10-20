@@ -16,7 +16,6 @@ var bot = new TwitterBot({
 
 var db = new Store('./storage/data.json');
 
-var keyword = '#remindme';
 var months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', ];
 
 var format_date = function (date)
@@ -54,7 +53,7 @@ var schedule_reminder = function (tweet, reminder_time)
         });
 };
 
-var stream = bot.filteredStream(keyword);
+var stream = bot.filteredStream(process.env.TWITTER_STREAM_FILTER);
 
 db.all(function (err, reminders) {
     for (var id in reminders)
@@ -71,7 +70,7 @@ stream.on('tweet', function (tweet) {
     var status = format_status(tweet);
 
     // find the reminder delay (provided in the #remindme Tweet)
-    var reminder_time = HumanDate(tweet.text.substring(tweet.text.indexOf(keyword) + keyword.length, tweet.text.length));
+    var reminder_time = HumanDate(tweet.text.substring(tweet.text.indexOf(process.env.TWITTER_STREAM_FILTER) + process.env.TWITTER_STREAM_FILTER.length, tweet.text.length));
 
     // build the formatted date to use in the initial acknowledgement reply
     var formatted_date = format_date(reminder_time);

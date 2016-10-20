@@ -66,6 +66,9 @@ db.all(function (err, reminders) {
 });
 
 stream.on('tweet', function (tweet) {
+    // ignore if the Tweet is MemberBerryBot itself
+    if (tweet.user.screen_name === process.env.TWITTER_HANDLE) return;
+
     // build the link to the original (if one exists)
     var status = format_status(tweet);
 

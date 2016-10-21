@@ -33,7 +33,30 @@ var format_date = function (date)
 
 var format_status = function (tweet)
 {
-    return tweet.in_reply_to_screen_name ? `\n\nhttps://twitter.com/${tweet.in_reply_to_screen_name}/status/${tweet.in_reply_to_status_id_str}` : '';
+    return tweet.in_reply_to_screen_name ? `\n\nhttps://twitter.com/${tweet.in_reply_to_screen_name}/status/${tweet.in_reply_to_status_id_str}` : `\n\nhttps://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
+};
+
+var communicate = function (message, tweet)
+{
+    bot.message(message, { screen_name: tweet.user.screen_name })
+        .then(function (result) {
+            if (result.data.created_at)
+            {
+                remove_reminder(tweet.id_str);
+            }
+            else
+            {
+                return bot.reply(message, { screen_name: tweet.user.screen_name, tweet_id: tweet.id_str });
+            }
+        })
+        .then(function (result) {
+            remove_reminder(tweet.id_str);
+        });
+};
+
+var remove_reminder = function (id)
+{
+    db.delete(id, function () {});
 };
 
 var schedule_reminder = function (tweet, reminder_time)
@@ -44,13 +67,8 @@ var schedule_reminder = function (tweet, reminder_time)
     bot.schedule(function () {
         var message = `Hey! 'Member this?${status}`;
 
-        bot.reply(message, { screen_name: tweet.user.screen_name, tweet_id: tweet.id_str });
-    }, reminder_time)
-        .then(function () {
-            // // remove reminder from filesystem
-            // storage.removeItem(tweet.id_str);
-            db.delete(tweet.id_str, function () {});
-        });
+        communicate(message, tweet);
+    }, reminder_time);
 };
 
 var stream = bot.filteredStream(process.env.TWITTER_STREAM_FILTER);
@@ -85,9 +103,10 @@ stream.on('tweet', function (tweet) {
     var formatted_date = format_date(reminder_time);
 
     // build our initial acknowledgement reply
-    var message = `Hi there! I'm here to help you 'member things. I will remind you of this soon (${formatted_date}).${status}`;
+    var message = `Hi there! I'm here to help you 'member things.\nReminder set for ${formatted_date}.`;
 
     // send the initial acknowledgement reply
+    // communicate(message, tweet);
     bot.reply(message, { screen_name: tweet.user.screen_name, tweet_id: tweet.id_str });
 
     // store reminder on filesystem
@@ -108,3 +127,7 @@ stream.on('connect', function () {
 stream.on('connected', function () {
     console.log('connected!');
 });
+
+stream.on('error', function (error) {
+    console.log('Error:', error);
+})

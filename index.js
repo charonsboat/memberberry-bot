@@ -33,7 +33,7 @@ var format_date = function (date)
 
 var format_status = function (tweet)
 {
-    return tweet.in_reply_to_screen_name ? `\n\nhttps://twitter.com/${tweet.in_reply_to_screen_name}/status/${tweet.in_reply_to_status_id_str}` : `\n\nhttps://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
+    return tweet.in_reply_to_status_id_str ? `\n\nhttps://twitter.com/${tweet.in_reply_to_screen_name}/status/${tweet.in_reply_to_status_id_str}` : `\n\nhttps://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`;
 };
 
 var communicate = function (message, tweet)
